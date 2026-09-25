@@ -10,5 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
   search.addEventListener('input', event => { state.query = event.target.value; clear.classList.toggle('visible', Boolean(state.query)); renderMenu(); }); clear.addEventListener('click', () => { search.value = ''; state.query = ''; clear.classList.remove('visible'); search.focus(); renderMenu(); });
   function setMenuExpanded(expanded, scrollToMenu = false) { menu.classList.toggle('focus-mode', expanded); document.body.classList.toggle('menu-is-expanded', expanded); sizeToggle.innerHTML = expanded ? 'Minimize <span>↙</span>' : 'Full menu <span>↗</span>'; sizeToggle.setAttribute('aria-pressed', String(expanded)); if (scrollToMenu) menu.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   document.getElementById('view-menu').addEventListener('click', () => setMenuExpanded(true, true)); sizeToggle.addEventListener('click', () => setMenuExpanded(!menu.classList.contains('focus-mode'))); collapseFab.addEventListener('click', () => setMenuExpanded(false, true));
+  const revealTargets = document.querySelectorAll('.menu-toolbar, .search-wrap, .meal-shortcuts, .reviews-section > *, .location-copy > *');
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('scroll-reveal-ready');
+    const revealObserver = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); } }), { threshold: 0.12 });
+    revealTargets.forEach(target => { target.classList.add('scroll-reveal'); revealObserver.observe(target); });
+  }
   renderCategories(); renderMenu();
 });
