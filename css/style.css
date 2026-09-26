@@ -154,3 +154,9 @@ footer { grid-template-columns:1.1fr .9fr; }
   .social-links a { padding:7px 3px; gap:3px; font-size:.62rem; }
   .social-icon { width:12px; height:12px; }
 }
+
+/* Keep the complete header in normal document flow on phone browsers. */
+@media (max-width:600px) {
+  .site-header { position:static; width:100%; min-width:0; }
+  .social-links { width:max-content; max-width:100%; }
+}
